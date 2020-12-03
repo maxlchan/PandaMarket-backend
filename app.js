@@ -8,8 +8,7 @@ const dbLoader = require('./loaders/db');
 initLoader(app);
 dbLoader();
 
-const ROUTES = require('./constants/routes');
-const RESPONSE = require('./constants/response');
+const { ROUTES } = require('./constants');
 
 const usersRouter = require('./routes/users');
 const auctionsRouter = require('./routes/auctions');
