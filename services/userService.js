@@ -1,6 +1,6 @@
 const User = require('../models/User');
 
-exports.getUserInfo = async (payload) => {
+exports.getOrCreateUser = async (payload) => {
   const { email, name, imageUrl } = payload;
 
   try {
@@ -16,11 +16,21 @@ exports.getUserInfo = async (payload) => {
   }
 };
 
-exports.getUserInfoByEmail = async (email) => {
+exports.getUserByEmail = async (email) => {
   try {
     const user = await User.findOne({ email });
 
     return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+exports.addMyAuction = async (payload, userId) => {
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { myAuction: payload },
+    });
   } catch (error) {
     throw new Error(error);
   }

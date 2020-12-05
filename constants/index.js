@@ -6,6 +6,7 @@ const ROUTES = {
   TOKEN: '/token',
   AUTIONS: '/auctions',
   AUTION_DETAIL: '/:auctionId',
+  UPLOAD: '/upload',
 };
 
 const RESPONSE = {
