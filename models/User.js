@@ -10,8 +10,8 @@ const UserSchema = new Schema(
     email: { type: String, required: true },
     name: { type: String, required: true },
     imageUrl: { type: String },
-    myAuction: [{ type: Schema.Types.ObjectId, ref: 'Auction' }],
-    reservedAuction: [{ type: Schema.Types.ObjectId, ref: 'Auction' }],
+    myAuctions: [{ type: Schema.Types.ObjectId, ref: 'Auction' }],
+    reservedAuctions: [{ type: Schema.Types.ObjectId, ref: 'Auction' }],
   },
   schemaOptions
 );

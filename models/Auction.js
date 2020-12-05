@@ -12,7 +12,7 @@ const AuctionSchema = new Schema(
     category: { type: String, required: true },
     picturesUrl: [{ type: String, required: true }],
     description: { type: String, required: true },
-    initPrice: { type: Number, required: true },
+    initalPrice: { type: Number, required: true },
     finalPrice: { type: Number },
     startedDateTime: { type: Date, required: true },
     isStarted: { type: Boolean, default: false },

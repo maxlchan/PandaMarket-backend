@@ -29,7 +29,7 @@ exports.getUserByEmail = async (email) => {
 exports.addMyAuction = async (payload, userId) => {
   try {
     await User.findByIdAndUpdate(userId, {
-      $addToSet: { myAuction: payload },
+      $addToSet: { myAuctions: payload },
     });
   } catch (error) {
     throw new Error(error);
