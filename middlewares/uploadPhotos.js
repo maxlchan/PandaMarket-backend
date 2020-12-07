@@ -27,7 +27,7 @@ const uploadPhoto = multer({
       cb(null, file.originalname);
     },
   }),
-});
+}).array('image', 5);
 
 const getPhotoUrl = (photosInfo) => photosInfo.map((photo) => photo.location);
 

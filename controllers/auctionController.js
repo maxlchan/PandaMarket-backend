@@ -1,7 +1,7 @@
-const { RESPONSE } = require('../constants');
 const auctionService = require('../services/auctionService');
-const { getPhotoUrl } = require('../middlewares/uploadPhotos');
 const userService = require('../services/userService');
+const { getPhotoUrl } = require('../middlewares/uploadPhotos');
+const { RESPONSE } = require('../constants');
 
 exports.getAllAuctions = async (req, res, next) => {
   try {

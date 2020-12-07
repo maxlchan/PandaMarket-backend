@@ -6,6 +6,6 @@ const verifyToken = require('../middlewares/verifyToken');
 const { uploadPhoto } = require('../middlewares/uploadPhotos');
 
 auctionsRouter.get(ROUTES.HOME, auctionController.getAllAuctions);
-auctionsRouter.post(ROUTES.HOME, verifyToken, uploadPhoto.array('image', 5), auctionController.createAuction);
+auctionsRouter.post(ROUTES.HOME, verifyToken, uploadPhoto, auctionController.createAuction);
 
 module.exports = auctionsRouter;
