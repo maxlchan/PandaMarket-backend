@@ -37,6 +37,7 @@ const initSocket = (server) => {
   io.on('connection', (socket) => {
     console.log('io connect!');
     console.log(socket.id);
+    let countdownId;
 
     socket.on('create room', ({ roomId, user }) => {
       const socketId = socket.id;
@@ -46,10 +47,12 @@ const initSocket = (server) => {
         host,
         members: [],
         messages: [],
+        privateMessages: [],
         winnerList: [],
         highestBidPriceList: [],
         isCountdownStart: false,
         timeCount: null,
+        isEnd: false,
       };
 
       rooms[roomId] = newRoom;
@@ -89,25 +92,46 @@ const initSocket = (server) => {
 
     socket.on('send message', (message) => {
       const currentMember = members[socket.id];
-      const { roomId, name, imageUrl } = currentMember;
+      const { roomId, name, imageUrl, _id: currentMemberId } = currentMember;
       const currentRoom = rooms[roomId];
       const currentMessages = currentRoom.messages;
-      const isHost = currentRoom.host._id === currentMember._id;
+      const isHost = currentRoom.host._id === currentMemberId;
 
-      const messageData = { message, name, imageUrl, isHost };
+      const messageData = {
+        message,
+        name,
+        imageUrl,
+        isHost,
+        ownerId: currentMemberId,
+      };
 
       currentMessages.push(messageData);
 
       io.in(roomId).emit('send message', currentRoom);
     });
 
-    let countdownId;
+    socket.on('send private message', (message) => {
+      const currentMember = members[socket.id];
+      const { roomId, name, imageUrl, _id: currentMemberId } = currentMember;
+      const currentRoom = rooms[roomId];
+      const currentPrivateMessages = currentRoom.privateMessages;
+      const isHost = currentRoom.host._id === currentMemberId;
+
+      const messageData = {
+        message,
+        name,
+        imageUrl,
+        isHost,
+        ownerId: currentMemberId,
+      };
+
+      currentPrivateMessages.push(messageData);
+
+      io.in(roomId).emit('send private message', currentRoom);
+    });
 
     socket.on('update highest bid price', (price) => {
       const currentMember = members[socket.id];
-
-      console.log(members);
-      console.log(socket.id);
       const { roomId, _id, name } = currentMember;
       const currentRoom = rooms[roomId];
 
@@ -141,9 +165,17 @@ const initSocket = (server) => {
       }, 1000);
     });
 
-    socket.on('leave', () => {
+    socket.on('broadcast end', () => {
       const { roomId } = members[socket.id];
-      delete members[socket.id];
+      const currentRoom = rooms[roomId];
+
+      currentRoom.isEnd = true;
+    });
+
+    socket.on('leave room', () => {
+      const socketId = socket.id;
+      const { roomId } = members[socketId];
+      delete members[socketId];
 
       socket.leave(roomId);
     });
@@ -167,7 +199,8 @@ const initSocket = (server) => {
       }
 
       const currentWinner = currentRoom.winnerList.slice(-1)[0];
-      const isWinnerLeaved = currentWinner && currentWinner._id === leaveMemberId;
+      const isWinnerLeaved =
+        currentWinner && currentWinner._id === leaveMemberId;
 
       if (isWinnerLeaved) {
         currentRoom.winnerList.pop();
