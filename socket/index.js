@@ -1,4 +1,5 @@
 const socketIo = require('socket.io');
+const config = require('../config');
 
 // const rooms = {
 //   roomId: {
@@ -23,16 +24,9 @@ const socketIo = require('socket.io');
 
 const members = {};
 const rooms = {};
-const socketConfig = {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-};
 
 const initSocket = (server) => {
-  const io = socketIo(server, socketConfig);
+  const io = socketIo(server, config.socket);
 
   io.on('connection', (socket) => {
     console.log('io connect!');
@@ -186,7 +180,7 @@ const initSocket = (server) => {
       const leaveMember = members[socket.id];
       const { roomId, _id: leaveMemberId } = leaveMember;
       const currentRoom = rooms[roomId];
-      const isHostLeaved = currentRoom.host._id === leaveMemberId;
+      const isHostLeaved = currentRoom && currentRoom.host._id === leaveMemberId;
 
       delete members[socket.id];
 
@@ -205,6 +199,8 @@ const initSocket = (server) => {
       if (isWinnerLeaved) {
         currentRoom.winnerList.pop();
         currentRoom.highestBidPriceList.pop();
+
+        clearInterval(countdownId);
       }
 
       const leaveMemberIndex = currentRoom.members.findIndex(

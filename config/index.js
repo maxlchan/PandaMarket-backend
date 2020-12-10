@@ -1,11 +1,18 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const dbUrl = process.env.MONGO_DB_URL;
 const mongoose = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
 };
 
-module.exports = { dbUrl, mongoose };
+const socket = {
+  cors: {
+    origin: process.env.CLIENT_URL,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+}
+
+module.exports = { mongoose, socket };

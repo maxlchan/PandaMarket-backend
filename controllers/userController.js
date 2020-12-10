@@ -11,9 +11,9 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign({ _id, email, name }, process.env.JWT_SECRET);
 
     res.status(200).json({ result: RESPONSE.OK, userInfo, token });
-  } catch (error) {
-    console.error(error);
-    next(error);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 };
 
@@ -27,8 +27,8 @@ exports.loginByToken = async (req, res, next) => {
     // await new Promise((resolve, reject) => setTimeout(() => resolve(), 2000));
 
     res.status(200).json({ result: RESPONSE.OK, userInfo });
-  } catch (error) {
-    console.error(error);
-    next(error);
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
 };

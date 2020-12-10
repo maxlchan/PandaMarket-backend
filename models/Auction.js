@@ -13,6 +13,7 @@ const AuctionSchema = new Schema(
     picturesUrl: [{ type: String, required: true }],
     description: { type: String, required: true },
     initalPrice: { type: Number, required: true },
+    winner: { type: Schema.Types.ObjectId, ref: 'User' },
     finalPrice: { type: Number },
     startedDateTime: { type: Date, required: true },
     isStarted: { type: Boolean, default: false },

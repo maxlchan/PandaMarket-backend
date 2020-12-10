@@ -12,7 +12,7 @@ exports.getAllAuctions = async (req, res, next) => {
     console.error(err);
     next(err);
   }
-}
+};
 
 exports.createAuction = async (req, res, next) => {
   const { _id: userId } = res.locals.userInfo;
@@ -29,6 +29,20 @@ exports.createAuction = async (req, res, next) => {
     await userService.addMyAuction(auctionInfo, userId);
 
     res.status(201).json({ result: RESPONSE.OK, auctionInfo });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.finishAuction = async (req, res, next) => {
+  const { auctionId } = req.params;
+  const payload = req.body;
+
+  try {
+    await auctionService.finishAuction(payload, auctionId);
+
+    res.status(201).json({ result: RESPONSE.OK })
   } catch (err) {
     console.error(err);
     next(err);

@@ -11,8 +11,8 @@ exports.getOrCreateUser = async (payload) => {
     );
 
     return user;
-  } catch (error) {
-    throw new Error(error);
+  } catch (err) {
+    throw new Error(err);
   }
 };
 
@@ -21,8 +21,8 @@ exports.getUserByEmail = async (email) => {
     const user = await User.findOne({ email });
 
     return user;
-  } catch (error) {
-    throw new Error(error);
+  } catch (err) {
+    throw new Error(err);
   }
 };
 
@@ -31,7 +31,7 @@ exports.addMyAuction = async (payload, userId) => {
     await User.findByIdAndUpdate(userId, {
       $addToSet: { myAuctions: payload },
     });
-  } catch (error) {
-    throw new Error(error);
+  } catch (err) {
+    throw new Error(err);
   }
 };

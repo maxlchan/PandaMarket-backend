@@ -5,10 +5,10 @@ exports.findAllAuctions = async () => {
     const auctions = await Auction.find();
 
     return auctions;
-  } catch (error) {
-    throw new Error(error);
+  } catch (err) {
+    throw new Error(err);
   }
-}
+};
 
 exports.createAuction = async (payload) => {
   const { userId } = payload;
@@ -17,7 +17,20 @@ exports.createAuction = async (payload) => {
     const auction = await Auction.create({ ...payload, host: userId });
 
     return auction;
-  } catch (error) {
-    throw new Error(error);
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+exports.finishAuction = async (payload, auctionId) => {
+  const { winner, finalPrice } = payload;
+  try {
+    await Auction.findByIdAndUpdate(auctionId, {
+      winner,
+      finalPrice,
+      isFinished: true,
+    });
+  } catch (err) {
+    throw new Error(err);
   }
 };
