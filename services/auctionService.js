@@ -22,8 +22,19 @@ exports.createAuction = async (payload) => {
   }
 };
 
+exports.reserveAuction = async (userId, auctionId) => {
+  try {
+    await Auction.findByIdAndUpdate(auctionId, {
+      $addToSet: { reservedUser: userId },
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 exports.finishAuction = async (payload, auctionId) => {
   const { winner, finalPrice } = payload;
+
   try {
     await Auction.findByIdAndUpdate(auctionId, {
       winner,

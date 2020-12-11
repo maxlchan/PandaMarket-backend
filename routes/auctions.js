@@ -15,9 +15,15 @@ auctionsRouter.post(
 );
 
 auctionsRouter.put(
-  `${ROUTES.AUTION_DETAIL}`,
+  `${ROUTES.AUTION_DETAIL}${ROUTES.FINISH}`,
   verifyToken,
   auctionController.finishAuction
+);
+
+auctionsRouter.put(
+  `${ROUTES.AUTION_DETAIL}${ROUTES.RESERVE}`,
+  verifyToken,
+  auctionController.reserveAuction
 );
 
 module.exports = auctionsRouter;

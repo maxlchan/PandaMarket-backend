@@ -6,6 +6,8 @@ const ROUTES = {
   TOKEN: '/token',
   AUTIONS: '/auctions',
   AUTION_DETAIL: '/:auctionId',
+  FINISH: '/finish',
+  RESERVE: '/reserve',
   UPLOAD: '/upload',
 };
 

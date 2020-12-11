@@ -35,3 +35,13 @@ exports.addMyAuction = async (payload, userId) => {
     throw new Error(err);
   }
 };
+
+exports.addReservedAuction = async (userId, auctionId) => {
+  try {
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { reservedAuctions: auctionId },
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
