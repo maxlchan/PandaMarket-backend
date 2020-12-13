@@ -43,9 +43,22 @@ exports.reserveAuction = async (req, res, next) => {
     await auctionService.reserveAuction(userId, auctionId);
     await userService.addReservedAuction(userId, auctionId);
 
-    const auctionsInfo = await auctionService.findAllAuctions();
+    const updatedAuctionsInfo = await auctionService.findAllAuctions();
 
-    res.status(200).json({ result: RESPONSE.OK, auctionsInfo });
+    res.status(200).json({ result: RESPONSE.OK, updatedAuctionsInfo });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+};
+
+exports.startAuction = async (req, res, next) => {
+  const { auctionId } = req.params;
+
+  try {
+    await auctionService.startAuction(auctionId);
+
+    res.status(200).json({ result: RESPONSE.OK });
   } catch (err) {
     console.error(err);
     next(err);
@@ -59,7 +72,7 @@ exports.finishAuction = async (req, res, next) => {
   try {
     await auctionService.finishAuction(payload, auctionId);
 
-    res.status(201).json({ result: RESPONSE.OK });
+    res.status(200).json({ result: RESPONSE.OK });
   } catch (err) {
     console.error(err);
     next(err);

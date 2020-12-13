@@ -1,7 +1,8 @@
 const createError = require('http-errors');
 const express = require('express');
 const app = express();
-
+const nodemailer = require('nodemailer');
+const sche = require('nodemailer');
 const initLoader = require('./loaders');
 const dbLoader = require('./loaders/db');
 
@@ -12,6 +13,18 @@ const { ROUTES, RESPONSE } = require('./constants');
 
 const usersRouter = require('./routes/users');
 const auctionsRouter = require('./routes/auctions');
+
+const main = async () => {
+  const testAccount = await nodemailer.createTestAccount();
+  console.log(testAccount);
+};
+const mailSender = {
+  sendGmail: () => {
+    transporter = mailer;
+  },
+};
+
+main();
 
 app.use(ROUTES.USERS, usersRouter);
 app.use(ROUTES.AUTIONS, auctionsRouter);

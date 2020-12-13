@@ -32,6 +32,16 @@ exports.reserveAuction = async (userId, auctionId) => {
   }
 };
 
+exports.startAuction = async (auctionId) => {
+  try {
+    await Auction.findByIdAndUpdate(auctionId, {
+      isStarted: true,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 exports.finishAuction = async (payload, auctionId) => {
   const { winner, finalPrice } = payload;
 

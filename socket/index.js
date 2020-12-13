@@ -1,42 +1,19 @@
 const socketIo = require('socket.io');
 const config = require('../config');
+const { SOCKET_EVENT } = require('../constants');
 
-// const rooms = {
-//   roomId: {
-//    host: {},
-//    members: [],
-//    messages: [],
-//    winnerList: [],
-//    highestBidPriceList: [],
-//    isCountdownStart: false,
-//    timeCount: null,
-//   }
-// };
-
-// const members = {
-//   sockId: {
-//     _id: 'asdasdad32423',
-//     name: '김찬중',
-//     imageUrl: 'https//:lh3adasd',
-//     socketId: 'adsad3234',
-//   },
-// };
-
-const members = {};
 const rooms = {};
+const members = {};
 
 const initSocket = (server) => {
   const io = socketIo(server, config.socket);
 
-  io.on('connection', (socket) => {
-    console.log('io connect!');
-    console.log(socket.id);
-    let countdownId;
+  io.on(SOCKET_EVENT.CONNECTION, (socket) => {
+    socket.on(SOCKET_EVENT.CREATE_ROOM, ({ roomId, user }) => {
+      if (rooms[roomId]) return;
 
-    socket.on('create room', ({ roomId, user }) => {
       const socketId = socket.id;
       const host = { ...user, roomId, socketId };
-
       const newRoom = {
         host,
         members: [],
@@ -46,45 +23,48 @@ const initSocket = (server) => {
         highestBidPriceList: [],
         isCountdownStart: false,
         timeCount: null,
-        isEnd: false,
+        isFinished: false,
       };
 
       rooms[roomId] = newRoom;
       members[socketId] = host;
-
       socket.join(roomId);
     });
 
-    socket.on('join room', ({ roomId, user }) => {
+    socket.on(SOCKET_EVENT.JOIN_ROOM, ({ roomId, user }) => {
       const currentRoom = rooms[roomId];
       if (!currentRoom) return;
 
       const socketId = socket.id;
       const newMember = { ...user, roomId, socketId };
       const currentRoomMembers = currentRoom.members;
+      const isInRoom = currentRoomMembers.find((member) => {
+        return member._id === user._id;
+      });
 
-      currentRoomMembers.push(newMember);
+      if (!isInRoom) currentRoomMembers.push(newMember);
+
       members[socketId] = newMember;
-
       socket.join(roomId);
+
       io.to(roomId).emit('member join room', socketId, user, currentRoom);
     });
 
-    socket.on('offer', (targetSocketId, event) => {
-      socket.to(targetSocketId).emit('offer', socket.id, event.sdp);
+    socket.on(SOCKET_EVENT.OFFER, (targetSocketId, event) => {
+      socket.to(targetSocketId).emit(SOCKET_EVENT.OFFER, socket.id, event.sdp);
     });
 
-    socket.on('answer', (event) => {
-      const hostSocketId = rooms[event.roomId].host.socketId;
+    socket.on(SOCKET_EVENT.ANSWER, (event) => {
+      const { host } = rooms[event.roomId];
 
-      socket.to(hostSocketId).emit('answer', socket.id, event.sdp);
+      socket.to(host.socketId).emit(SOCKET_EVENT.ANSWER, socket.id, event.sdp);
     });
 
-    socket.on('candidate', (targetSocketId, event) => {
-      socket.to(targetSocketId).emit('candidate', socket.id, event);
+    socket.on(SOCKET_EVENT.CANDIDATE, (targetSocketId, event) => {
+      socket.to(targetSocketId).emit(SOCKET_EVENT.CANDIDATE, socket.id, event);
     });
 
-    socket.on('send message', (message) => {
+    socket.on(SOCKET_EVENT.SEND_MESSAGE, (message) => {
       const currentMember = members[socket.id];
       const { roomId, name, imageUrl, _id: currentMemberId } = currentMember;
       const currentRoom = rooms[roomId];
@@ -101,10 +81,10 @@ const initSocket = (server) => {
 
       currentMessages.push(messageData);
 
-      io.in(roomId).emit('send message', currentRoom);
+      io.in(roomId).emit('change room status', currentRoom);
     });
 
-    socket.on('send private message', (message) => {
+    socket.on(SOCKET_EVENT.SEND_PRIVATE_MESSAGE, (message) => {
       const currentMember = members[socket.id];
       const { roomId, name, imageUrl, _id: currentMemberId } = currentMember;
       const currentRoom = rooms[roomId];
@@ -121,10 +101,12 @@ const initSocket = (server) => {
 
       currentPrivateMessages.push(messageData);
 
-      io.in(roomId).emit('send private message', currentRoom);
+      io.in(roomId).emit(SOCKET_EVENT.CHANGE_ROOM_STATUS, currentRoom);
     });
 
-    socket.on('update highest bid price', (price) => {
+    let countdownId;
+
+    socket.on(SOCKET_EVENT.UPDATE_HIGHEST_BID_PRICE, (price) => {
       const currentMember = members[socket.id];
       const { roomId, _id, name } = currentMember;
       const currentRoom = rooms[roomId];
@@ -136,10 +118,10 @@ const initSocket = (server) => {
 
       clearInterval(countdownId);
 
-      io.in(roomId).emit('update highest bid price', currentRoom);
+      io.in(roomId).emit(SOCKET_EVENT.CHANGE_ROOM_STATUS, currentRoom);
     });
 
-    socket.on('countdown', (limitedSeconds) => {
+    socket.on(SOCKET_EVENT.COUNTDOWN, (limitedSeconds) => {
       const { roomId } = members[socket.id];
       const currentRoom = rooms[roomId];
 
@@ -154,40 +136,42 @@ const initSocket = (server) => {
           return;
         }
 
-        io.in(roomId).emit('countdown', currentRoom);
+        io.in(roomId).emit(SOCKET_EVENT.CHANGE_ROOM_STATUS, currentRoom);
         currentRoom.timeCount--;
       }, 1000);
     });
 
-    socket.on('broadcast end', () => {
+    socket.on(SOCKET_EVENT.FINISH_BROADCAST, () => {
       const { roomId } = members[socket.id];
       const currentRoom = rooms[roomId];
 
-      currentRoom.isEnd = true;
+      currentRoom.isFinished = true;
     });
 
-    socket.on('leave room', () => {
+    socket.on(SOCKET_EVENT.LEAVE_ROOM, () => {
       const socketId = socket.id;
       const { roomId } = members[socketId];
-      delete members[socketId];
 
+      delete members[socketId];
       socket.leave(roomId);
     });
 
-    socket.on('disconnect', () => {
-      if (!members[socket.id]) return;
+    socket.on(SOCKET_EVENT.DISCONNECT, () => {
+      const socketId = socket.id;
+      const leaveMember = members[socketId];
 
-      const leaveMember = members[socket.id];
-      const { roomId, _id: leaveMemberId } = leaveMember;
+      if (!leaveMember) return;
+
+      delete members[socketId];
+
       const currentRoom = rooms[roomId];
-      const isHostLeaved = currentRoom && currentRoom.host._id === leaveMemberId;
-
-      delete members[socket.id];
+      const { roomId, _id: leaveMemberId } = leaveMember;
+      const isHostLeaved = currentRoom.host._id === leaveMemberId;
 
       if (isHostLeaved) {
         delete rooms[roomId];
         socket.leave(roomId);
-        socket.broadcast.to(roomId).emit('room broked by host');
+        socket.broadcast.to(roomId).emit(SOCKET_EVENT.ROOM_BROKED_BY_HOST);
 
         return;
       }
@@ -203,16 +187,16 @@ const initSocket = (server) => {
         clearInterval(countdownId);
       }
 
-      const leaveMemberIndex = currentRoom.members.findIndex(
-        (member) => member._id === leaveMemberId
-      );
+      const leaveMemberIndex = currentRoom.members.findIndex((member) => {
+        return member._id === leaveMemberId;
+      });
 
       currentRoom.members.splice(leaveMemberIndex, 1);
 
       socket.leave(roomId);
       socket.broadcast
         .to(roomId)
-        .emit('leave room', socket.id, leaveMember.name, currentRoom);
+        .emit(SOCKET_EVENT.LEAVE_ROOM, socketId, leaveMember.name, currentRoom);
     });
   });
 };
