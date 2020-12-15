@@ -1,18 +1,6 @@
-const AWS = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
-  region: 'ap-northeast-2',
-});
-
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_KEY,
-  region: 'ap-northeast-2',
-});
+const { s3 } = require('../config');
 
 const uploadPhoto = multer({
   storage: multerS3({
@@ -29,17 +17,4 @@ const uploadPhoto = multer({
   }),
 }).array('image', 5);
 
-const getPhotoUrl = (photosInfo) => photosInfo.map((photo) => photo.location);
-
-const deletePhoto = async (urlList) => {
-  const array = urlList.map((url) => {
-    const Key = url.split('/')[url.split('/').length - 1];
-    const params = { Bucket: 'panda-market', Key };
-
-    return s3.deleteObject(params).promise();
-  });
-
-  return Promise.all(array);
-};
-
-module.exports = { uploadPhoto, getPhotoUrl, deletePhoto };
+module.exports = uploadPhoto;

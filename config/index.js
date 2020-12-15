@@ -1,3 +1,4 @@
+const AWS = require('aws-sdk');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -13,6 +14,15 @@ const socket = {
     methods: ['GET', 'POST'],
     credentials: true,
   },
+};
+
+const aws = {
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: 'ap-northeast-2',
 }
 
-module.exports = { mongoose, socket };
+AWS.config.update(aws);
+const s3 = new AWS.S3(aws);
+
+module.exports = { mongoose, socket, s3 };
