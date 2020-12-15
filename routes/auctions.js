@@ -15,19 +15,19 @@ auctionsRouter.post(
 );
 
 auctionsRouter.put(
-  `${ROUTES.AUTION_DETAIL}${ROUTES.RESERVE}`,
+  `${ROUTES.AUCTION_DETAIL}${ROUTES.RESERVE}`,
   verifyToken,
   auctionController.reserveAuction
 );
 
 auctionsRouter.put(
-  `${ROUTES.AUTION_DETAIL}${ROUTES.START}`,
+  `${ROUTES.AUCTION_DETAIL}${ROUTES.START}`,
   verifyToken,
   auctionController.startAuction
 );
 
 auctionsRouter.put(
-  `${ROUTES.AUTION_DETAIL}${ROUTES.FINISH}`,
+  `${ROUTES.AUCTION_DETAIL}${ROUTES.FINISH}`,
   verifyToken,
   auctionController.finishAuction
 );

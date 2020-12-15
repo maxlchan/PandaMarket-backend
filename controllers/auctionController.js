@@ -1,7 +1,8 @@
+const schedule = require('node-schedule');
 const auctionService = require('../services/auctionService');
 const userService = require('../services/userService');
-const { RESPONSE } = require('../constants');
-const { getPhotoUrl } = require('../utils');
+const { ROUTES, RESPONSE, MESSAGE } = require('../constants');
+const { getPhotoUrl, sendMail } = require('../utils');
 
 exports.getAllAuctions = async (req, res, next) => {
   try {
@@ -15,18 +16,23 @@ exports.getAllAuctions = async (req, res, next) => {
 };
 
 exports.createAuction = async (req, res, next) => {
-  const { _id: userId } = res.locals.userInfo;
+  const { _id: userId, email, name } = res.locals.userInfo;
   const awsPhotoUrlList = getPhotoUrl(req.files);
   const payload = req.body;
-  const { startedDateTime } = payload;
 
   payload.picturesUrl = awsPhotoUrlList;
   payload.userId = userId;
-  payload.startedDateTime = new Date(startedDateTime);
 
   try {
     const auctionInfo = await auctionService.createAuction(payload);
+    const { _id, startedDateTime } = auctionInfo;
     await userService.addMyAuction(auctionInfo, userId);
+
+    schedule.scheduleJob(startedDateTime, () => {
+      sendMail(email, name, _id, MESSAGE.AUCTION_TIME_ARRIVED);
+    });
+
+    await new Promise((resolve, reject) => setTimeout(() => resolve(), 1000));
 
     res.status(201).json({ result: RESPONSE.OK, auctionInfo });
   } catch (err) {
@@ -56,7 +62,16 @@ exports.startAuction = async (req, res, next) => {
   const { auctionId } = req.params;
 
   try {
-    await auctionService.startAuction(auctionId);
+    const { isStarted, reservedUser } = await auctionService.startAuction(
+      auctionId
+    );
+
+    if (!isStarted) {
+      reservedUser.forEach(async (userId) => {
+        const { email, name } = await userService.getUserById(userId);
+        sendMail(email, name, auctionId, MESSAGE.AUCTION_START);
+      });
+    }
 
     res.status(200).json({ result: RESPONSE.OK });
   } catch (err) {

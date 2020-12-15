@@ -34,9 +34,11 @@ exports.reserveAuction = async (userId, auctionId) => {
 
 exports.startAuction = async (auctionId) => {
   try {
-    await Auction.findByIdAndUpdate(auctionId, {
+    const auction = await Auction.findByIdAndUpdate(auctionId, {
       isStarted: true,
     });
+
+    return auction;
   } catch (err) {
     throw new Error(err);
   }

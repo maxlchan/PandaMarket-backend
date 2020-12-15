@@ -26,6 +26,16 @@ exports.getUserByEmail = async (email) => {
   }
 };
 
+exports.getUserById = async (userId) => {
+  try {
+    const user = await User.findById(userId);
+
+    return user;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 exports.addMyAuction = async (payload, userId) => {
   try {
     await User.findByIdAndUpdate(userId, {

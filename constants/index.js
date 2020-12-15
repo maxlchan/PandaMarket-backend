@@ -4,12 +4,13 @@ const ROUTES = {
   USERS: '/users',
   USER_DETAIL: '/:userId',
   TOKEN: '/token',
-  AUTIONS: '/auctions',
-  AUTION_DETAIL: '/:auctionId',
+  AUCTIONS: '/auctions',
+  AUCTION_DETAIL: '/:auctionId',
   START: '/start',
   FINISH: '/finish',
   RESERVE: '/reserve',
   UPLOAD: '/upload',
+  BROADCAST: '/broadcast',
 };
 
 const RESPONSE = {
@@ -38,4 +39,9 @@ const SOCKET_EVENT = {
   DISCONNECT: 'disconnect',
 };
 
-module.exports = { ROUTES, RESPONSE, SOCKET_EVENT };
+const MESSAGE = {
+  AUCTION_TIME_ARRIVED: '[🐼팬더마켓] 예약하신 경매물품의 시간이 임박했습니다',
+  AUCTION_START: '[🐼팬더마켓] 예약하신 경매가 시작되었습니다',
+};
+
+module.exports = { ROUTES, RESPONSE, SOCKET_EVENT, MESSAGE };
