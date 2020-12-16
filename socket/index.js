@@ -1,12 +1,11 @@
 const socketIo = require('socket.io');
-const config = require('../config');
 const { SOCKET_EVENT } = require('../constants');
 
 const rooms = {};
 const members = {};
 
 const initSocket = (server) => {
-  const io = socketIo(server, config.socket);
+  const io = socketIo(server);
 
   io.on(SOCKET_EVENT.CONNECTION, (socket) => {
     socket.on(SOCKET_EVENT.CREATE_ROOM, ({ roomId, user }) => {

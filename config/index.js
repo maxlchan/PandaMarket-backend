@@ -9,14 +9,6 @@ const mongoose = {
   useFindAndModify: false,
 };
 
-const socket = {
-  cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-};
-
 const nodeMailer = {
   service: 'gmail',
   port: 587,
@@ -38,4 +30,4 @@ const aws = {
 AWS.config.update(aws);
 const s3 = new AWS.S3(aws);
 
-module.exports = { mongoose, socket, s3, transporter };
+module.exports = { mongoose, s3, transporter };
