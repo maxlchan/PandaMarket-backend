@@ -32,8 +32,6 @@ exports.createAuction = async (req, res, next) => {
       sendMail(email, name, _id, MESSAGE.AUCTION_TIME_ARRIVED);
     });
 
-    await new Promise((resolve, reject) => setTimeout(() => resolve(), 1000));
-
     res.status(201).json({ result: RESPONSE.OK, auctionInfo });
   } catch (err) {
     console.error(err);
