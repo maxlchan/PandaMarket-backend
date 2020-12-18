@@ -3,7 +3,7 @@ const auctionsRouter = express.Router();
 const auctionController = require('../controllers/auctionController');
 const { ROUTES } = require('../constants');
 const verifyToken = require('../middlewares/verifyToken');
-const uploadPhoto = require('../middlewares/uploadPhotos');
+const uploadPhoto = require('../middlewares/uploadPhoto');
 
 auctionsRouter.get(ROUTES.HOME, auctionController.getAllAuctions);
 

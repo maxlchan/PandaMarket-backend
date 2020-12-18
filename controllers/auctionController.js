@@ -1,7 +1,7 @@
 const schedule = require('node-schedule');
 const auctionService = require('../services/auctionService');
 const userService = require('../services/userService');
-const { ROUTES, RESPONSE, MESSAGE } = require('../constants');
+const { RESPONSE, MESSAGE } = require('../constants');
 const { getPhotoUrl, sendMail } = require('../utils');
 
 exports.getAllAuctions = async (req, res, next) => {
