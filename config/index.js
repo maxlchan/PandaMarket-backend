@@ -9,7 +9,7 @@ const mongoose = {
   useFindAndModify: false,
 };
 
-const nodeMailer = {
+const nodeMailerOptions = {
   service: 'gmail',
   port: 587,
   secure: false,
@@ -19,7 +19,7 @@ const nodeMailer = {
   },
 };
 
-const transporter = nodemailer.createTransport(nodeMailer);
+const transporter = nodemailer.createTransport(nodeMailerOptions);
 
 const aws = {
   accessKeyId: process.env.AWS_ACCESS_KEY,
