@@ -6,7 +6,7 @@
 
 👉 시뮬레이션 가이드 영상 : [https://www.youtube.com/watch?v=hcTGFmjfqOs](https://www.youtube.com/watch?v=hcTGFmjfqOs)
 
-![simulation](https://media.giphy.com/media/6UrrQbX32nUPv9XoDy/giphy.gif)
+![https://media.giphy.com/media/6UrrQbX32nUPv9XoDy/giphy.gif](https://media.giphy.com/media/6UrrQbX32nUPv9XoDy/giphy.gif)
 
 👉 라이브 중고 경매 시연 영상(프로젝트 발표 中) : [https://youtu.be/jMw5MIxLY3o?t=6597](https://youtu.be/jMw5MIxLY3o?t=6597)
 
@@ -20,8 +20,6 @@
 - [Deploy](#🌐-Deploy)
 - [How to use](#🕹-How-to-Use)
 - [Project Schedule](#🗓-Project-Schedule)
-- [Project Process](#project-process)
-- [Collaboration principle](#collaboration-principle)
 - [Challenge & Focus point](#🥊-Challenge-&-Focus-point)
 - [Things to do](#🚀-Things-to-do)
 
@@ -177,7 +175,7 @@ npm run dev
 
 ### 컴포넌트 세분화와 재사용
 
-이번 프로젝트는 비록 규모는 작지만 재사용 할 수 있는 컴포넌트를 많이 만들어보고 재사용도 많이 해보자! 라는 목표를 정하고 프로젝트에 임하였습니다. 이에 상태관리 로직은 최대한 컨테이너에서 이루어지도록하여 컴포넌트를 최대한 경량화시키고자 하였고, 큰 단위라고 생각되어지는 모달창 혹은 카루셀 카드에서부터 네비게이션 Tab 등 작은 단위의 요소들까지 컴포넌트로 분리하고자 노력하였습니다.  
+이번 프로젝트는 비록 규모는 작지만 재사용 할 수 있는 컴포넌트를 많이 만들어보고 재사용도 많이 해보자! 라는 목표를 정하고 프로젝트에 임하였습니다. 이에 상태관리 로직은 최대한 컨테이너에서 이루어지도록하여 컴포넌트를 최대한 경량화시키고자 하였고, 큰 단위라고 생각되어지는 모달창 혹은 카루셀 카드에서부터 네비게이션 Tab 등 작은 단위의 요소들까지 컴포넌트로 분리하고자 노력하였습니다.
 
 해당 부분에 집중하면서 느낀 장점은 **첫번째,** Redux와 소통하는 컨테이너의 로직이 길어지고 복합하게 업데이트 되더라도 Concern 분리가 명확해짐에 따라 가독성이 크게 떨어지지 않았습니다. **두번째로** 컴포넌트 함수가 순수해짐에 따라 테스트 코드를 작성하는 것이 원활했습니다.
 
