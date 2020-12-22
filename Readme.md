@@ -6,7 +6,9 @@
 
 👉 시뮬레이션 가이드 영상 : [https://www.youtube.com/watch?v=hcTGFmjfqOs](https://www.youtube.com/watch?v=hcTGFmjfqOs)
 
-![https://media.giphy.com/media/6UrrQbX32nUPv9XoDy/giphy.gif](https://media.giphy.com/media/6UrrQbX32nUPv9XoDy/giphy.gif)
+![https://media.giphy.com/media/xnHosKB0mFOK8Yy3WG/giphy-downsized.gif](https://media.giphy.com/media/xnHosKB0mFOK8Yy3WG/giphy-downsized.gif)
+
+![https://media.giphy.com/media/4RlgoDefSt3FSJGeux/giphy-downsized-large.gif](https://media.giphy.com/media/4RlgoDefSt3FSJGeux/giphy-downsized-large.gif)
 
 👉 라이브 중고 경매 시연 영상(프로젝트 발표 中) : [https://youtu.be/jMw5MIxLY3o?t=6597](https://youtu.be/jMw5MIxLY3o?t=6597)
 
