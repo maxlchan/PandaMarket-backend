@@ -44,4 +44,9 @@ const MESSAGE = {
   AUCTION_START: '[🐼팬더마켓] 예약하신 경매가 시작되었습니다',
 };
 
-module.exports = { ROUTES, RESPONSE, SOCKET_EVENT, MESSAGE };
+const CLIENT_BASE_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://www.pandamarket.live'
+    : 'http://localhost:3000';
+
+module.exports = { ROUTES, RESPONSE, SOCKET_EVENT, MESSAGE, CLIENT_BASE_URL };
