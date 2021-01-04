@@ -60,7 +60,7 @@
 - Node.js
 - Express
 - MongoDB / MongoDB Atlas for data persistence
-- Moongoose
+- Mongoose
 - JSON Web Token Authentication
 - AWS S3 for uploading data file
 - Socket.io
